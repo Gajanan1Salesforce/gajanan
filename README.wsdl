@@ -1,0 +1,73 @@
+<wsdl:definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+xmlns:s="http://www.w3.org/2001/XMLSchema"
+xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+xmlns:tns="http://doc.sample.com/docSample"
+targetNamespace="http://doc.sample.com/docSample"
+xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+
+<!-- Above, the schema targetNamespace maps to the Apex class name. -->
+
+
+<!-- Below, the type definitions for the parameters are listed. 
+     Each complexType and simpleType parameteris mapped to an Apex class inside the parent class for the WSDL.  Then, each element in the complexType is mapped to a public field inside the class. -->
+
+<wsdl:types>
+<s:schema elementFormDefault="qualified"
+targetNamespace="http://doc.sample.com/docSample">
+<s:element name="EchoString">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="input" type="s:string" />
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:element name="EchoStringResponse">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="EchoStringResult"
+type="s:string" />
+</s:sequence>
+</s:complexType>
+</s:element>
+</s:schema>
+</wsdl:types>
+
+<!--The stub below defines operations. -->
+
+<wsdl:message name="EchoStringSoapIn">
+<wsdl:part name="parameters" element="tns:EchoString" />
+</wsdl:message>
+<wsdl:message name="EchoStringSoapOut">
+<wsdl:part name="parameters" element="tns:EchoStringResponse" />
+</wsdl:message>
+<wsdl:portType name="DocSamplePortType">
+<wsdl:operation name="EchoString">
+<wsdl:input message="tns:EchoStringSoapIn" />
+<wsdl:output message="tns:EchoStringSoapOut" />
+</wsdl:operation>
+</wsdl:portType>
+
+<!--The code below defines how the types map to SOAP. -->
+
+<wsdl:binding name="DocSampleBinding" type="tns:DocSamplePortType">
+<wsdl:operation name="EchoString">
+<soap:operation soapAction="urn:dotnet.callouttest.soap.sforce.com/EchoString"
+style="document" />
+<wsdl:input>
+<soap:body use="literal" />
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal" />
+</wsdl:output>
+</wsdl:operation>
+</wsdl:binding>
+
+<!-- Finally, the code below defines the endpoint, which maps to the endpoint in the class -->
+
+<wsdl:service name="DocSample">
+<wsdl:port name="DocSamplePort" binding="tns:DocSampleBinding">
+<soap:address location="http://YourServer/YourService" />
+</wsdl:port>
+</wsdl:service>
+</wsdl:definitions>
